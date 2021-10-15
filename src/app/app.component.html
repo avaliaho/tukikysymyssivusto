@@ -1,1 +1,13 @@
-<h1>{{ title }}</h1>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../assets/avenla-logo.svg" alt="Avenla Ltd. Logo" width="120" height="24"
+                class="d-inline-block align-text-top">
+            Wordpress Multisite Shared Media
+        </a>
+        <form class="d-flex">
+            <input [(ngModel)]="haku" name="haku" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button (click)="meneHakuSivulle()" class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
