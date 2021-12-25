@@ -1,1 +1,13 @@
-<p>etusivu works!</p>
+<div class="container m-5">
+    <h1>All Questions</h1>
+    <hr>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let kysymys of kysymykset">
+            <p><b>{{kysymys.title.rendered}}</b>&nbsp;[ id: {{ kysymys.id }} ]</p>            
+            <p [innerHTML]='kysymys.excerpt.rendered'></p>
+            <p>Posted on: {{ kysymys.date | date:'longDate' }}</p>
+        </li>
+    </ul>
+
+</div>

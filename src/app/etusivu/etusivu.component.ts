@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Kysymys } from '../kysymys';
+import { KysymysService } from '../kysymys.service';
 
 @Component({
   selector: 'app-etusivu',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EtusivuComponent implements OnInit {
 
-  constructor() { }
+  constructor(private kysymysService: KysymysService) { }
+
+  kysymykset: Kysymys[] = [];
+
+  haeKysymykset(): void {
+    this.kysymysService.haeKysymykset()
+        .subscribe(kysymykset => this.kysymykset = kysymykset);
+  }
 
   ngOnInit(): void {
+    this.haeKysymykset();
   }
 
 }
