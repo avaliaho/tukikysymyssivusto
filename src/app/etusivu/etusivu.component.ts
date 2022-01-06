@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Kysymys } from '../kysymys';
 import { KysymysService } from '../kysymys.service';
-import { mergeMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-etusivu',
@@ -12,11 +12,48 @@ export class EtusivuComponent implements OnInit {
 
   constructor(private kysymysService: KysymysService) { }
 
-  kysymykset: Kysymys[] = [];
-  kysymysTagienIdt: number[] = [];
-  laskuri: string;
+  yhdistettyArray: Kysymys[] = [];
+  //kysymysTagienIdt: number[] = [];
+  //laskuri: string;
 
   haeKysymykset(): void {
+    this.kysymysService
+      .haeKysymykset()
+      .pipe(
+        switchMap((kysymykset: Kysymys[]) => {
+          const idt = kysymykset.map((kysymys) => kysymys.tags)
+            .join(',') // Kutsutaan avainsana-APIa ID:eillä
+          return this.kysymysService
+            .haeAvainSanat(idt)
+            .pipe(map((tagit) => ({ kysymykset, tagit })))
+        })
+      )
+      .subscribe(({ kysymykset, tagit }) => {
+        const yhdistettyArray = kysymykset.map((k) => {
+          return {
+            ...k,
+            tag_names: k.tags
+              .map((tagiId) => tagit.find((x) => x.id == tagiId)?.name)
+              .filter((onOlemassa) => !!onOlemassa)
+          };
+        });
+
+        this.yhdistettyArray = yhdistettyArray;
+
+        for (let kysymys of this.yhdistettyArray) {
+          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 125)
+          kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 300)
+        }
+      })
+  }
+
+  lyhenna(merkkijono: string, n: number) {
+    return (merkkijono.length > n)
+      ? merkkijono.substr(0, n - 1) + '...' : merkkijono;
+  };
+
+  /*
+  haeKysymyksetVanha(): void {
     this.kysymysService.haeKysymykset()
       .subscribe(kysymykset => {
         this.kysymykset = [...kysymykset.body!];
@@ -32,6 +69,7 @@ export class EtusivuComponent implements OnInit {
         console.log(this.kysymysTagienIdt)
       });
   }
+  */
 
   ngOnInit(): void {
     this.haeKysymykset();
