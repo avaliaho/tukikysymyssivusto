@@ -20,8 +20,8 @@ export class KysymysService {
     return this.http.get<any>(`http://localhost/wordpress/wp-json/wp/v2/tags?include=${numerot}`);
   }
 
-  /** Haetaan http-vastauksen observe-lisäoptiolla */
-  haeKysymystenMaara(): Observable<HttpResponse<Kysymys[]>> {
+  /** Haetaan http-vastauksen headerit observe-lisäoptiolla */
+  haeHeaderit(): Observable<HttpResponse<Kysymys[]>> {
     return this.http.get<Kysymys[]>("http://localhost/wordpress/wp-json/wp/v2/posts",
       { observe: 'response' });
   }

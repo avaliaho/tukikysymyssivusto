@@ -13,8 +13,7 @@ export class EtusivuComponent implements OnInit {
   constructor(private kysymysService: KysymysService) { }
 
   yhdistettyArray: Kysymys[] = [];
-  //kysymysTagienIdt: number[] = [];
-  //laskuri: string;
+  laskuri: string;
 
   haeKysymykset(): void {
     this.kysymysService
@@ -41,7 +40,7 @@ export class EtusivuComponent implements OnInit {
         this.yhdistettyArray = yhdistettyArray;
 
         for (let kysymys of this.yhdistettyArray) {
-          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 125)
+          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 75)
           kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 300)
         }
       })
@@ -52,27 +51,17 @@ export class EtusivuComponent implements OnInit {
       ? merkkijono.substr(0, n - 1) + '...' : merkkijono;
   };
 
-  /*
-  haeKysymyksetVanha(): void {
-    this.kysymysService.haeKysymykset()
+  
+  haeKysymystenMaara(): void {
+    this.kysymysService.haeHeaderit()
       .subscribe(kysymykset => {
-        this.kysymykset = [...kysymykset.body!];
         this.laskuri = kysymykset.headers.get('X-WP-Total');
-
-        for (let kysymys of kysymykset.body) {
-          for (let i = 0; i < kysymys.tags.length; i++) {
-            if (!this.kysymysTagienIdt.includes(Number(kysymys.tags[i]))) {
-              this.kysymysTagienIdt.push(Number(kysymys.tags[i]));
-            }
-          }
-        }
-        console.log(this.kysymysTagienIdt)
       });
   }
-  */
 
   ngOnInit(): void {
     this.haeKysymykset();
+    this.haeKysymystenMaara();
   }
 
 }
