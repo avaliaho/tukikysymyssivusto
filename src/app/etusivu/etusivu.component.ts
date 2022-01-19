@@ -21,7 +21,7 @@ export class EtusivuComponent implements OnInit {
       .pipe(
         switchMap((kysymykset: Kysymys[]) => {
           const idt = kysymykset.map((kysymys) => kysymys.tags)
-            .join(',') // Kutsutaan avainsana-APIa ID:eillä
+            .join(',') // Kutsutaan avainsana-APIa ID:illä
           return this.kysymysService
             .haeAvainSanat(idt)
             .pipe(map((tagit) => ({ kysymykset, tagit })))
