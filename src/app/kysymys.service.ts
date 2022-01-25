@@ -20,6 +20,11 @@ export class KysymysService {
     return this.http.get<any>(`http://localhost/wordpress/wp-json/wp/v2/tags?include=${numerot}`);
   }
 
+  /** Haetaan haluttujen id-numeroiden perusteella tietyt vastaukset */
+  haeVastaukset(numerot: string): Observable<any> {
+    return this.http.get<any>(`http://localhost/wordpress/wp-json/wp/v2/comments?post=${numerot}`);
+  }
+
   /** Haetaan http-vastauksen headerit observe-lisäoptiolla */
   haeHeaderit(): Observable<HttpResponse<Kysymys[]>> {
     return this.http.get<Kysymys[]>("http://localhost/wordpress/wp-json/wp/v2/posts",

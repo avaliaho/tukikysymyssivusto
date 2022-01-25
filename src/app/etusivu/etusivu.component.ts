@@ -14,25 +14,34 @@ export class EtusivuComponent implements OnInit {
 
   yhdistettyArray: Kysymys[] = [];
   laskuri: string;
+  
 
   haeKysymykset(): void {
-    this.kysymysService
-      .haeKysymykset()
+    this.kysymysService.haeKysymykset()
       .pipe(
         switchMap((kysymykset: Kysymys[]) => {
-          const idt = kysymykset.map((kysymys) => kysymys.tags)
-            .join(',') // Kutsutaan avainsana-APIa ID:illä
-          return this.kysymysService
-            .haeAvainSanat(idt)
+          // Kutsutaan avainsana-APIa ID:illä
+          const idt = kysymykset.map((kysymys) => kysymys.tags).join(',')
+          return this.kysymysService.haeAvainSanat(idt)
             .pipe(map((tagit) => ({ kysymykset, tagit })))
         })
       )
-      .subscribe(({ kysymykset, tagit }) => {
-        const yhdistettyArray = kysymykset.map((k) => {
+      .pipe(
+        switchMap((kysymyksetJaTagit) => {
+          // Kutsutaan vastaus-APIa ID:illä
+          const idt = kysymyksetJaTagit.kysymykset.map((kysymys) => kysymys.id).join(',');
+          return this.kysymysService.haeVastaukset(idt)
+            .pipe(map((vastaukset) => ({ kysymyksetJaTagit, vastaukset })));
+        })
+      )
+      .subscribe(({ kysymyksetJaTagit, vastaukset }) => {
+        console.log("kysymyksetJaTagit", kysymyksetJaTagit)
+        console.log("vastaukset", vastaukset)
+        const yhdistettyArray = kysymyksetJaTagit.kysymykset.map((k) => {
           return {
             ...k,
             tag_names: k.tags
-              .map((tagiId) => tagit.find((x) => x.id == tagiId)?.name)
+              .map((tagiId) => kysymyksetJaTagit.tagit.find((x) => x.id == tagiId)?.name)
               .filter((onOlemassa) => !!onOlemassa)
           };
         });
@@ -47,11 +56,10 @@ export class EtusivuComponent implements OnInit {
   }
 
   lyhenna(merkkijono: string, n: number) {
-    return (merkkijono.length > n)
-      ? merkkijono.substr(0, n - 1) + '...' : merkkijono;
+    return (merkkijono.length > n) ? merkkijono.substr(0, n - 1) + '...' : merkkijono;
   };
 
-  
+
   haeKysymystenMaara(): void {
     this.kysymysService.haeHeaderit()
       .subscribe(kysymykset => {

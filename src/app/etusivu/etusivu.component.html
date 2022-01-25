@@ -3,22 +3,17 @@
     <p>{{ laskuri }} questions</p>
     <hr>
 
-    <div *ngIf="yhdistettyArray.length">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray">
-                <p><b>{{kysymys.title.rendered}}</b>
-                </p>
-                <p [innerHTML]='kysymys.excerpt.rendered'></p>
-                <span *ngFor="let tagi of kysymys.tag_names">
-                    <a href="#" class="badge bg-secondary">{{ tagi }}</a>&nbsp;
-                </span>
-                <span>{{ kysymys.date | date:'medium' }}</span>
-            </li>
-        </ul>
-    </div>
-    <div *ngIf="!yhdistettyArray.length">
-        <p>There is nothing here yet.</p>
-    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray">
+            <p><b>{{kysymys.title.rendered}}</b>
+            </p>
+            <p [innerHTML]='kysymys.excerpt.rendered'></p>
+            <span *ngFor="let tagi of kysymys.tag_names">
+                <a href="#" class="badge bg-secondary">{{ tagi }}</a>&nbsp;
+            </span>
+            <span>{{ kysymys.date | date:'medium' }}</span>
+        </li>
+    </ul>
 
     <hr>
 
