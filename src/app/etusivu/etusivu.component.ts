@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Kysymys } from '../kysymys';
 import { KysymysService } from '../kysymys.service';
+import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -12,47 +13,40 @@ export class EtusivuComponent implements OnInit {
 
   constructor(private kysymysService: KysymysService) { }
 
-  yhdistettyArray: Kysymys[] = [];
   laskuri: string;
-  
+  yhdistettyArray$: Observable<any>;
 
-  haeKysymykset(): void {
-    this.kysymysService.haeKysymykset()
-      .pipe(
-        switchMap((kysymykset: Kysymys[]) => {
-          // Kutsutaan avainsana-APIa ID:illä
-          const idt = kysymykset.map((kysymys) => kysymys.tags).join(',')
-          return this.kysymysService.haeAvainSanat(idt)
-            .pipe(map((tagit) => ({ kysymykset, tagit })))
-        })
-      )
-      .pipe(
-        switchMap((kysymyksetJaTagit) => {
-          // Kutsutaan vastaus-APIa ID:illä
-          const idt = kysymyksetJaTagit.kysymykset.map((kysymys) => kysymys.id).join(',');
-          return this.kysymysService.haeVastaukset(idt)
-            .pipe(map((vastaukset) => ({ kysymyksetJaTagit, vastaukset })));
-        })
-      )
-      .subscribe(({ kysymyksetJaTagit, vastaukset }) => {
-        console.log("kysymyksetJaTagit", kysymyksetJaTagit)
-        console.log("vastaukset", vastaukset)
-        const yhdistettyArray = kysymyksetJaTagit.kysymykset.map((k) => {
+  haeKysymykset(): Observable<any> {
+    return this.kysymysService.haeKysymykset().pipe(
+      switchMap((kysymykset: Kysymys[]) => {
+        const tagiIDt = kysymykset.map((kysymys) => kysymys.tags).join(',');
+        const kysymysIDt = kysymykset.map((kysymys) => kysymys.id).join(',');
+
+        return forkJoin({
+          questions: of(kysymykset),
+          tags: this.kysymysService.haeAvainSanat(tagiIDt),
+          comments: this.kysymysService.haeVastaukset(kysymysIDt),
+        });
+      }),
+      map(({ questions, tags, comments }) => {
+        const yhdistettyArray = questions.map((kysymys) => {
           return {
-            ...k,
-            tag_names: k.tags
-              .map((tagiId) => kysymyksetJaTagit.tagit.find((x) => x.id == tagiId)?.name)
-              .filter((onOlemassa) => !!onOlemassa)
+            ...kysymys,
+            tag_names: kysymys.tags
+              .map((tagi_ID) => tags.find((tagi) => tagi.id == tagi_ID)?.name)
+              .filter((onOlemassa) => !!onOlemassa),
+            comments: comments.filter((vastaus) => vastaus.post === kysymys.id),
           };
         });
 
-        this.yhdistettyArray = yhdistettyArray;
-
-        for (let kysymys of this.yhdistettyArray) {
-          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 75)
+        for (let kysymys of yhdistettyArray) {
+          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 100)
           kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 300)
         }
+
+        return yhdistettyArray;
       })
+    );
   }
 
   lyhenna(merkkijono: string, n: number) {
@@ -67,9 +61,9 @@ export class EtusivuComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-    this.haeKysymykset();
+  ngOnInit(): void {    
     this.haeKysymystenMaara();
+    this.yhdistettyArray$ = this.haeKysymykset();
   }
 
 }

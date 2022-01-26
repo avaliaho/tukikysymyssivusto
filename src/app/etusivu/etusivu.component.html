@@ -1,20 +1,28 @@
 <div class="container m-5">
     <h1>All Questions</h1>
     <p>{{ laskuri }} questions</p>
-    <hr>
-
+    <hr />
     <ul class="list-group list-group-flush">
-        <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray">
-            <p><b>{{kysymys.title.rendered}}</b>
-            </p>
-            <p [innerHTML]='kysymys.excerpt.rendered'></p>
-            <span *ngFor="let tagi of kysymys.tag_names">
-                <a href="#" class="badge bg-secondary">{{ tagi }}</a>&nbsp;
-            </span>
-            <span>{{ kysymys.date | date:'medium' }}</span>
+
+        <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray$ | async">
+            <div class="row">
+                <div class="col-xs-1 col-md-1">{{ kysymys?.comments?.length }}<br>answers</div>
+                <div class="col-xs-11 col-md-11"><b>{{ kysymys.title.rendered }}</b>
+                    <br>
+                    <p [innerHTML]='kysymys.excerpt.rendered'></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-1 col-md-1"></div>
+                <div class="col-xs-8 col-md-8">
+                    <span *ngFor="let tagin_nimi of kysymys.tag_names">
+                        <a href="#" class="badge bg-secondary">{{ tagin_nimi }}</a>&nbsp;
+                    </span>
+                </div>
+                <div class="col-xs-3 col-md-3">
+                    <span>{{ kysymys.date | date:'medium' }}</span>
+                </div>
+            </div>
         </li>
     </ul>
-
-    <hr>
-
 </div>
