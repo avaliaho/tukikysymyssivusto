@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Kysymys } from '../kysymys';
 import { KysymysService } from '../kysymys.service';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of, from } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-etusivu',
@@ -11,13 +12,30 @@ import { map, switchMap } from 'rxjs/operators';
 })
 export class EtusivuComponent implements OnInit {
 
-  constructor(private kysymysService: KysymysService) { }
+  constructor(
+    private kysymysService: KysymysService,
+    private reitti: ActivatedRoute
+  ) {
+
+    this.yhdistettyArray$ = this.reitti.params.pipe(
+      switchMap((params) => {
+        if (!params.page) {
+          return of([]);
+        }
+        this.nykyinenSivu = +params.page;
+        return from(this.haeKysymykset(+params.page));
+      })
+    );
+
+  }
 
   laskuri: string;
+  sivumaara: number;
+  nykyinenSivu: number;
   yhdistettyArray$: Observable<any>;
 
-  haeKysymykset(): Observable<any> {
-    return this.kysymysService.haeKysymykset().pipe(
+  haeKysymykset(sivu: number): Observable<any> {
+    return this.kysymysService.haeKysymykset(sivu).pipe(
       switchMap((kysymykset: Kysymys[]) => {
         const tagiIDt = kysymykset.map((kysymys) => kysymys.tags).join(',');
         const kysymysIDt = kysymykset.map((kysymys) => kysymys.id).join(',');
@@ -55,15 +73,15 @@ export class EtusivuComponent implements OnInit {
 
 
   haeKysymystenMaara(): void {
-    this.kysymysService.haeHeaderit()
-      .subscribe(kysymykset => {
-        this.laskuri = kysymykset.headers.get('X-WP-Total');
-      });
+    this.kysymysService.haeHeaderit().subscribe(kysymykset => {
+      this.laskuri = kysymykset.headers.get('X-WP-Total');
+      this.sivumaara = +kysymykset.headers.get('X-WP-TotalPages');
+    });
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.haeKysymystenMaara();
-    this.yhdistettyArray$ = this.haeKysymykset();
+
   }
 
 }

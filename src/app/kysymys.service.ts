@@ -11,8 +11,8 @@ export class KysymysService {
   constructor(private http: HttpClient) { }
 
   /** Haetaan kaikki kysymykset palvelimelta */
-  haeKysymykset(): Observable<Kysymys[]> {
-    return this.http.get<Kysymys[]>("http://localhost/wordpress/wp-json/wp/v2/posts")
+  haeKysymykset(sivu: number): Observable<Kysymys[]> {
+    return this.http.get<Kysymys[]>(`http://localhost/wordpress/wp-json/wp/v2/posts?page=${sivu}&per_page=3`)
   }
 
   /** Haetaan haluttujen id-numeroiden perusteella tietyt avainsanat */
@@ -27,7 +27,7 @@ export class KysymysService {
 
   /** Haetaan http-vastauksen headerit observe-lisäoptiolla */
   haeHeaderit(): Observable<HttpResponse<Kysymys[]>> {
-    return this.http.get<Kysymys[]>("http://localhost/wordpress/wp-json/wp/v2/posts",
+    return this.http.get<Kysymys[]>("http://localhost/wordpress/wp-json/wp/v2/posts?per_page=3",
       { observe: 'response' });
   }
 
