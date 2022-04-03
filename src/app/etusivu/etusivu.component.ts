@@ -16,26 +16,29 @@ export class EtusivuComponent implements OnInit {
     private kysymysService: KysymysService,
     private reitti: ActivatedRoute
   ) {
-
+    
     this.yhdistettyArray$ = this.reitti.params.pipe(
       switchMap((params) => {
         if (!params.page) {
           return of([]);
         }
         this.nykyinenSivu = +params.page;
-        return from(this.haeKysymykset(+params.page));
+        this.jarjestys = params.orderby;
+        this.laskevaNouseva = params.order;
+        return from(this.haeKysymykset(+params.page, params.orderby, params.order));
       })
     );
-
   }
 
   laskuri: string;
   sivumaara: number;
   nykyinenSivu: number;
+  jarjestys: string;
+  laskevaNouseva: string;
   yhdistettyArray$: Observable<any>;
 
-  haeKysymykset(sivu: number): Observable<any> {
-    return this.kysymysService.haeKysymykset(sivu).pipe(
+  haeKysymykset(sivu: number, jarjestys: string, laskevaNouseva: string): Observable<any> {
+    return this.kysymysService.haeKysymykset(sivu, jarjestys, laskevaNouseva).pipe(
       switchMap((kysymykset: Kysymys[]) => {
         const tagiIDt = kysymykset.map((kysymys) => kysymys.tags).join(',');
         const kysymysIDt = kysymykset.map((kysymys) => kysymys.id).join(',');
@@ -59,7 +62,7 @@ export class EtusivuComponent implements OnInit {
 
         for (let kysymys of yhdistettyArray) {
           kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 100)
-          kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 300)
+          kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 275)
         }
 
         return yhdistettyArray;

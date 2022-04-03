@@ -11,8 +11,8 @@ export class KysymysService {
   constructor(private http: HttpClient) { }
 
   /** Haetaan kaikki kysymykset palvelimelta */
-  haeKysymykset(sivu: number): Observable<Kysymys[]> {
-    return this.http.get<Kysymys[]>(`http://localhost/wordpress/wp-json/wp/v2/posts?page=${sivu}&per_page=3`)
+  haeKysymykset(sivu: number, jarjestys: string, laskevaNouseva: string): Observable<Kysymys[]> {
+    return this.http.get<Kysymys[]>(`http://localhost/wordpress/wp-json/wp/v2/posts?page=${sivu}&per_page=3&orderby=${jarjestys}&order=${laskevaNouseva}`)
   }
 
   /** Haetaan haluttujen id-numeroiden perusteella tietyt avainsanat */

@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { EtusivuComponent } from './etusivu/etusivu.component';
 
 const reitit: Routes = [
-  { path: 'frontpage/:page', component: EtusivuComponent },
-  { path: '', redirectTo: '/frontpage/1', pathMatch: 'full' }
+  { path: 'questions/:page/:orderby/:order', component: EtusivuComponent },
+  { path: '', redirectTo: '/questions/1/date/desc', pathMatch: 'full' }
 ];
 
 @NgModule({
