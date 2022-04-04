@@ -2,8 +2,6 @@
 
 Lahden LAB-ammattikorkeakoulun opinnäytetyön artefakti. Valmistumisvuosi 2022. Aleksander Väliaho.
 
-![Etusivu selaimessa](https://i.imgur.com/JEThWaZ.png)
-
 # Opinnäytetyön tausta, tavoite ja rajaus
 
 Opinnäytetyöaiheenani on toteuttaa toimeksiantajalle Stack Overflow -tyyppinen ohjelmistoratkaisu, joka on kysymys-vastaus-periaatteella toimiva asiakastukikysymys-sivusto. Toimeksiantajalla on ohjelmistotuote, jota he haluavat myydä. He saavat usein sähköpostiin toistuvia kysymyksiä asiakkailta ohjelmiston käyttöönottoon ja tukeen liittyen. Näihin vastaaminen on osoittautunut liian työlääksi, joten nyt onkin tarkoituksena luoda sivusto, jossa on kootusti yhdessä paikkaa asiakkaiden lähettämät kysymykset ja toimeksiantajan kirjoittamat vastaukset.
