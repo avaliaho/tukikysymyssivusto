@@ -1,0 +1,85 @@
+<div class="container m-5">
+
+    <!-- Otsikko, laskuri ja painonapit -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <h1>All Questions</h1>
+            </div>
+            <div class="col-md-2">
+                <a routerLink="/ask" class="btn btn-primary" role="button" aria-disabled="true">Ask Question</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div *ngIf="yhdistettyArray$ | async">
+                    <p>{{ laskuri }} questions</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a routerLink="/questions/1/date/desc" class="btn btn-outline-secondary" role="button" aria-disabled="true">Newest</a>
+                    <a routerLink="/questions/1/comment_count/asc" class="btn btn-outline-secondary" role="button" aria-disabled="true">Unanswered</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Kysymys-sisältö -->
+    <ul class="list-group list-group-flush">
+
+        <div *ngIf="(yhdistettyArray$ | async) == null">
+            <div class="alert alert-info" role="alert">
+                Loading content... If this message does not disappear in a few seconds,
+                the application may have encountered an error.
+            </div>
+        </div>
+
+        <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray$ | async">
+            <div class="row">
+                <div class="col-xs-1 col-md-1">{{ kysymys?.comments?.length }}<br>answers</div>
+                <div class="col-xs-11 col-md-11"><b>{{ kysymys.title.rendered }}</b>
+                    <br>
+                    <p [innerHTML]='kysymys.excerpt.rendered'></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-1 col-md-1"></div>
+                <div class="col-xs-8 col-md-8">
+                    <span *ngFor="let tagin_nimi of kysymys.tag_names">
+                        <a href="#" class="badge bg-secondary">{{ tagin_nimi }}</a>&nbsp;
+                    </span>
+                </div>
+                <div class="col-xs-3 col-md-3">
+                    <span>{{ kysymys.date | date:'medium' }}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <hr>
+
+    <!-- Navigointi -->
+    <div *ngIf="yhdistettyArray$ | async">
+        <nav aria-label="Sivun navigointi">
+            <ul class="pagination">
+                <li class="page-item" [ngClass]="{'disabled': nykyinenSivu === 1 }">
+                    <a routerLink="/questions/{{nykyinenSivu-1}}/{{jarjestys}}/{{laskevaNouseva}}" class="page-link"
+                        href="#">Previous</a>
+                </li>
+                <li *ngFor="let sivu of [].constructor(sivumaara); let i = index" class="page-item"
+                    [ngClass]="{'active': i+1 === nykyinenSivu }">
+                    <a routerLink="/questions/{{i+1}}/{{jarjestys}}/{{laskevaNouseva}}" class="page-link" href="#">{{
+                        i+1 }}</a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': nykyinenSivu === sivumaara }">
+                    <a routerLink="/questions/{{nykyinenSivu+1}}/{{jarjestys}}/{{laskevaNouseva}}" class="page-link"
+                        href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
