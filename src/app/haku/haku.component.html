@@ -1,1 +1,56 @@
-<p>haku works!</p>
+<div class="container m-5">
+
+    <!-- Otsikko, laskuri ja painonapit -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <h1>Questions by search term [{{hakutermi}}]</h1>
+            </div>
+            <div class="col-md-2">
+                <a routerLink="/ask" class="btn btn-primary" role="button" aria-disabled="true">Ask Question</a>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="kysymykset">
+                <p>{{ laskuri }} questions</p>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Kysymys-sisältö -->
+    <ul class="list-group list-group-flush">
+
+        <div *ngIf="laskuri == 0">
+            <p>We couldn't find anything for <b>{{hakutermi}}</b>. Try different or less specific keywords.</p>
+        </div>
+
+        <li class="list-group-item" *ngFor="let kysymys of kysymykset">
+            <div class="col-xs-11 col-md-11"><b>{{ kysymys.title }}</b></div>
+        </li>
+    </ul>
+
+    <hr>
+
+    <!-- Navigointi -->
+    <div *ngIf="kysymykset.length != 0">
+        <nav aria-label="Sivun navigointi">
+            <ul class="pagination">
+                <li class="page-item" [ngClass]="{'disabled': nykyinenSivu === 1 }">
+                    <a routerLink="/search/{{hakutermi}}/{{nykyinenSivu-1}}" class="page-link" href="#">Previous</a>
+                </li>
+                <li *ngFor="let sivu of [].constructor(sivumaara); let i = index" class="page-item"
+                    [ngClass]="{'active': i+1 === nykyinenSivu }">
+                    <a routerLink="/search/{{hakutermi}}/{{i+1}}" class="page-link" href="#">{{
+                        i+1 }}</a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': nykyinenSivu === sivumaara }">
+                    <a routerLink="/search/{{hakutermi}}/{{nykyinenSivu+1}}" class="page-link"
+                        href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
