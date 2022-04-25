@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-  import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  constructor(private reititin: Router){
+  constructor(private reititin: Router) {
   }
 
   haku: string = "";
-  
+
   meneHakuSivulle() {
-    this.reititin.navigate([`search/${this.haku}`])
+    if (this.haku != "") {
+      this.reititin.navigate([`search/${this.haku}/1`]);
+    }
   }
 }
