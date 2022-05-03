@@ -40,7 +40,7 @@
         <li class="list-group-item" *ngFor="let kysymys of yhdistettyArray$ | async">
             <div class="row">
                 <div class="col-xs-1 col-md-1">{{ kysymys?.comments?.length }}<br>answers</div>
-                <div class="col-xs-11 col-md-11"><b>{{ kysymys.title.rendered }}</b>
+                <div class="col-xs-11 col-md-11"><b><a routerLink="/detail/{{kysymys.id}}">{{ kysymys.title.rendered }}</a></b>
                     <br>
                     <p [innerHTML]='kysymys.excerpt.rendered'></p>
                 </div>
