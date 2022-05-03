@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { EtusivuComponent } from './etusivu/etusivu.component';
 import { HakuComponent } from './haku/haku.component';
+import { YksityiskohtaComponent } from './yksityiskohta/yksityiskohta.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EtusivuComponent,
-    HakuComponent
+    HakuComponent,
+    YksityiskohtaComponent
   ],
   imports: [
     BrowserModule,
