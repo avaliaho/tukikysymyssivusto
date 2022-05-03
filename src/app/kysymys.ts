@@ -12,7 +12,8 @@ export interface Kysymys {
     "type": string;
     "link": string;
     "title": { 
-        "rendered": string; 
+        "rendered": string;
+        "truncated": string;
     };
     "content": {
         "rendered": string;
@@ -21,6 +22,7 @@ export interface Kysymys {
     "excerpt": {
         "rendered": string;
         "protected": boolean;
+        "truncated": string;
     };
     "author": number;
     "featured_media": number;
