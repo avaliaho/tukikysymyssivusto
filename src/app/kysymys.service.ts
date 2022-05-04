@@ -41,7 +41,12 @@ export class KysymysService {
   /** Haetaan hakuehtoja vastaavan http-vastauksen headerit observe-lisäoptiolla */
   haeHeaderitHakusanalla(hakuTermi: string): Observable<HttpResponse<Kysymys[]>> {
     return this.http.get<Kysymys[]>(`${this.kysymyksetUrl}/search?search=${hakuTermi}&per_page=10`,
-    { observe: 'response' });
+      { observe: 'response' });
+  }
+
+  /** Haetaan tietty kysymys annetun ID:n perusteella palvelimelta */
+  haeKysymys(id: number): Observable<Kysymys[]> {
+    return this.http.get<Kysymys[]>(`${this.kysymyksetUrl}/posts/${id}}`)
   }
 
 }
