@@ -61,8 +61,8 @@ export class EtusivuComponent implements OnInit {
         });
 
         for (let kysymys of yhdistettyArray) {
-          kysymys.title.rendered = this.lyhenna(kysymys.title.rendered, 100)
-          kysymys.excerpt.rendered = this.lyhenna(kysymys.excerpt.rendered, 275)
+          kysymys.title.truncated = this.lyhenna(kysymys.title.rendered, 100)
+          kysymys.excerpt.truncated = this.lyhenna(kysymys.excerpt.rendered, 275)
         }
 
         return yhdistettyArray;
