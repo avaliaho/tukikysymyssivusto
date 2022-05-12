@@ -45,8 +45,13 @@ export class KysymysService {
   }
 
   /** Haetaan tietty kysymys annetun ID:n perusteella palvelimelta */
-  haeKysymys(id: number): Observable<Kysymys[]> {
-    return this.http.get<Kysymys[]>(`${this.kysymyksetUrl}/posts/${id}}`)
+  haeKysymys(id: number): Observable<Kysymys> {
+    return this.http.get<Kysymys>(`${this.kysymyksetUrl}/posts/${id}`)
+  }
+
+  /** Haetaan halutun kysymysId-numeron perusteella tietyt vastaukset */
+  haeYksityiskohdanVastaukset(kysymysId: number): Observable<any> {
+    return this.http.get<any>(`${this.kysymyksetUrl}/comments?post=${kysymysId}`);
   }
 
 }

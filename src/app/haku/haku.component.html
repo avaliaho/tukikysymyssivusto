@@ -27,7 +27,7 @@
         </div>
 
         <li class="list-group-item" *ngFor="let kysymys of kysymykset">
-            <div class="col-xs-11 col-md-11"><b>{{ kysymys.title }}</b></div>
+            <div class="col-xs-11 col-md-11"><b><a routerLink="/detail/{{kysymys.id}}">{{ kysymys.title }}</a></b></div>
         </li>
     </ul>
 
