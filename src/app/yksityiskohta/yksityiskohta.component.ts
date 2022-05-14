@@ -29,6 +29,7 @@ export class YksityiskohtaComponent implements OnInit {
   }
 
   yhdistetty$: Observable<any>;
+  vastaus: string = "";
 
   haeKysymys(id: number): Observable<any> {
     return this.kysymysService.haeKysymys(id).pipe(
@@ -59,6 +60,12 @@ export class YksityiskohtaComponent implements OnInit {
         return yhdistetty;
       })
     );
+  }
+
+  tallennaVastaus() {
+    if (this.vastaus.length >= 30) {
+      alert("success");
+    }
   }
 
   ngOnInit(): void {

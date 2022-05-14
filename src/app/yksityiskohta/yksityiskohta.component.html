@@ -1,5 +1,6 @@
 <div class="container m-5">
 
+    <!-- Valittu kysymys ja vastaukset -->
     <div *ngFor="let data of yhdistetty$ | async">
         <h1>{{ data.title.rendered }}</h1>
         <p>Asked {{ data.date | date:'medium' }}</p>
@@ -15,5 +16,19 @@
             <hr>
         </div>
     </div>
+
+    <!-- Lomake -->
+    <label for="vastaus"><h4>Your Answer</h4></label>
+    <textarea class="form-control" id="vastaus" rows="3" name="vastaus" required minlength="30" [(ngModel)]="vastaus"
+        #kentta="ngModel"></textarea>
+
+    <div *ngIf="kentta.invalid && (kentta.dirty || kentta.touched)" class="omaAlert">
+        <div *ngIf="kentta.errors?.required">Body is missing.</div>
+        <div *ngIf="kentta.errors?.minlength">
+            Body must be at least 30 characters; you entered {{ vastaus.length }}.
+        </div>
+    </div>
+    <br>
+    <button [disabled]="kentta.invalid" (click)="tallennaVastaus()" class="btn btn-primary" type="submit">Post Your Answer</button>
 
 </div>
