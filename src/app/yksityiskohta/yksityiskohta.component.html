@@ -17,6 +17,11 @@
         </div>
     </div>
 
+    <div class="p-3 mb-2 bg-success text-white" *ngIf="uusiKommentti != null">
+        <p [innerHTML]="uusiKommentti?.content?.rendered"></p>
+        <p class="text-end">Answered {{ uusiKommentti?.date | date:'medium' }}</p>
+    </div>
+
     <!-- Lomake -->
     <label for="vastaus"><h4>Your Answer</h4></label>
     <textarea class="form-control" id="vastaus" rows="3" name="vastaus" required minlength="30" [(ngModel)]="vastaus"
@@ -29,6 +34,6 @@
         </div>
     </div>
     <br>
-    <button [disabled]="kentta.invalid" (click)="tallennaVastaus()" class="btn btn-primary" type="submit">Post Your Answer</button>
+    <button [disabled]="kentta.invalid" (click)="tallennaVastaus(kentta.value)" class="btn btn-primary" type="submit">Post Your Answer</button>
 
 </div>

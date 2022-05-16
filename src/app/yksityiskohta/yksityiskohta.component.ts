@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Kysymys } from '../kysymys';
+import { Vastaus } from '../vastaus';
 import { KysymysService } from '../kysymys.service';
 import { Observable, forkJoin, of, from } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -22,6 +23,7 @@ export class YksityiskohtaComponent implements OnInit {
         if (!params.id) {
           return of([]);
         }
+        this.id = +params.id;
         return from(this.haeKysymys(+params.id));
       })
     );
@@ -30,6 +32,8 @@ export class YksityiskohtaComponent implements OnInit {
 
   yhdistetty$: Observable<any>;
   vastaus: string = "";
+  id: number;
+  uusiKommentti: any;
 
   haeKysymys(id: number): Observable<any> {
     return this.kysymysService.haeKysymys(id).pipe(
@@ -62,10 +66,22 @@ export class YksityiskohtaComponent implements OnInit {
     );
   }
 
-  tallennaVastaus() {
-    if (this.vastaus.length >= 30) {
-      alert("success");
+  tallennaVastaus(kentanArvo: string) {
+    this.vastaus = "";
+
+    let vastausData = {
+      "content": kentanArvo,
+      "date": new Date().toJSON(),
+      "post": this.id,
+      "author_name": "root",
+      "author_email": "aleksander.valiaho7@gmail.com"
     }
+    
+    if (!kentanArvo) { return; }
+    this.kysymysService.lisaaVastaus(vastausData as Vastaus)
+      .subscribe(vastaus => {
+        this.uusiKommentti = vastaus;
+      })
   }
 
   ngOnInit(): void {
