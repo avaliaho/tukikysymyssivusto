@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Kysymys } from './kysymys';
+import { Vastaus } from './vastaus';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,10 @@ export class KysymysService {
   constructor(private http: HttpClient) { }
 
   private kysymyksetUrl = 'http://localhost/wordpress/wp-json/wp/v2';
+
+  httpValinnat = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   /** Haetaan kaikki kysymykset palvelimelta */
   haeKysymykset(sivu: number, jarjestys: string, laskevaNouseva: string): Observable<Kysymys[]> {
@@ -45,8 +50,18 @@ export class KysymysService {
   }
 
   /** Haetaan tietty kysymys annetun ID:n perusteella palvelimelta */
-  haeKysymys(id: number): Observable<Kysymys[]> {
-    return this.http.get<Kysymys[]>(`${this.kysymyksetUrl}/posts/${id}}`)
+  haeKysymys(id: number): Observable<Kysymys> {
+    return this.http.get<Kysymys>(`${this.kysymyksetUrl}/posts/${id}`)
+  }
+
+  /** Haetaan halutun kysymysId-numeron perusteella tietyt vastaukset */
+  haeYksityiskohdanVastaukset(kysymysId: number): Observable<any> {
+    return this.http.get<any>(`${this.kysymyksetUrl}/comments?post=${kysymysId}`);
+  }
+
+  /** Lisää uusi vastaus kysymykseen */
+  lisaaVastaus(vastaus: Vastaus): Observable<Vastaus> {
+    return this.http.post<Vastaus>(`${this.kysymyksetUrl}/comments`, vastaus, this.httpValinnat);
   }
 
 }

@@ -1,1 +1,44 @@
-<p>yksityiskohta works!</p>
+<div class="container m-5">
+
+    <!-- Valittu kysymys ja vastaukset -->
+    <div *ngFor="let data of yhdistetty$ | async">
+        <h1>{{ data.title.rendered }}</h1>
+        <p>Asked {{ data.date | date:'medium' }}</p>
+        <hr>
+        <p [innerHTML]='data.content.rendered'></p>
+        <span *ngFor="let tagin_nimi of data.tag_names">
+            <a routerLink="/search/{{tagin_nimi}}/1" class="badge bg-secondary">{{ tagin_nimi }}</a>&nbsp;
+        </span><br><br>
+        <p>{{ data?.comments?.length }} answers</p>
+        <div *ngFor="let vastaus of data.comments">
+            <p [innerHTML]='vastaus?.content?.rendered'></p>
+            <p class="text-end">Answered {{ vastaus?.date | date:'medium' }}</p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="p-3 mb-2 bg-success text-white" *ngIf="uusiKommentti != null">
+        <p [innerHTML]="uusiKommentti?.content?.rendered"></p>
+        <p class="text-end">Answered {{ uusiKommentti?.date | date:'medium' }}</p>
+    </div>
+
+    <!-- Lomake -->
+    <label for="vastaus">
+        <h4>Your Answer</h4>
+    </label>
+    <textarea class="form-control" id="vastaus" rows="3" name="vastaus" required minlength="30" [(ngModel)]="vastaus"
+        #kentta="ngModel"></textarea>
+
+    <div *ngIf="kentta.invalid && (kentta.dirty || kentta.touched)" class="omaAlert">
+        <div *ngIf="kentta.errors?.required">Body is missing.</div>
+        <div *ngIf="kentta.errors?.minlength">
+            Body must be at least 30 characters; you entered {{ vastaus.length }}.
+        </div>
+    </div>
+    <br>
+    <re-captcha (resolved)="resolved($event)" siteKey="6Ld87_kfAAAAAGNVPdxGafmaCu9iFSn5XX_ukkPl"></re-captcha>
+    <br>
+    <button [disabled]="kentta.invalid || !captcha" (click)="tallennaVastaus(kentta.value)" class="btn btn-primary"
+        type="submit">Post Your Answer</button>
+
+</div>
