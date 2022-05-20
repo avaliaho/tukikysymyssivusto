@@ -23,7 +23,9 @@
     </div>
 
     <!-- Lomake -->
-    <label for="vastaus"><h4>Your Answer</h4></label>
+    <label for="vastaus">
+        <h4>Your Answer</h4>
+    </label>
     <textarea class="form-control" id="vastaus" rows="3" name="vastaus" required minlength="30" [(ngModel)]="vastaus"
         #kentta="ngModel"></textarea>
 
@@ -34,6 +36,9 @@
         </div>
     </div>
     <br>
-    <button [disabled]="kentta.invalid" (click)="tallennaVastaus(kentta.value)" class="btn btn-primary" type="submit">Post Your Answer</button>
+    <re-captcha (resolved)="resolved($event)" siteKey="6Ld87_kfAAAAAGNVPdxGafmaCu9iFSn5XX_ukkPl"></re-captcha>
+    <br>
+    <button [disabled]="kentta.invalid || !captcha" (click)="tallennaVastaus(kentta.value)" class="btn btn-primary"
+        type="submit">Post Your Answer</button>
 
 </div>

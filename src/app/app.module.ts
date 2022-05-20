@@ -9,6 +9,8 @@ import { EtusivuComponent } from './etusivu/etusivu.component';
 import { HakuComponent } from './haku/haku.component';
 import { YksityiskohtaComponent } from './yksityiskohta/yksityiskohta.component';
 
+import { RecaptchaModule } from 'ng-recaptcha';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,8 @@ import { YksityiskohtaComponent } from './yksityiskohta/yksityiskohta.component'
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    RecaptchaModule
   ],
   providers: [
     // ei tarvitse laittaa yhtään provideria johtuen 'providedIn'-flagistä

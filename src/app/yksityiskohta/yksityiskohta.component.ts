@@ -18,6 +18,8 @@ export class YksityiskohtaComponent implements OnInit {
     private reitti: ActivatedRoute
   ) {
 
+    this.captcha = '';
+
     this.yhdistetty$ = this.reitti.params.pipe(
       switchMap((params) => {
         if (!params.id) {
@@ -34,6 +36,7 @@ export class YksityiskohtaComponent implements OnInit {
   vastaus: string = "";
   id: number;
   uusiKommentti: any;
+  captcha: string;
 
   haeKysymys(id: number): Observable<any> {
     return this.kysymysService.haeKysymys(id).pipe(
@@ -85,6 +88,11 @@ export class YksityiskohtaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  resolved(captchaResponse: string) {
+    this.captcha = captchaResponse;
+    console.log('resolved captcha with response: ' + this.captcha)
   }
 
 }
