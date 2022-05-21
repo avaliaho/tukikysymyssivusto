@@ -10,13 +10,15 @@ import { HakuComponent } from './haku/haku.component';
 import { YksityiskohtaComponent } from './yksityiskohta/yksityiskohta.component';
 
 import { RecaptchaModule } from 'ng-recaptcha';
+import { UusiKysymysComponent } from './uusi-kysymys/uusi-kysymys.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EtusivuComponent,
     HakuComponent,
-    YksityiskohtaComponent
+    YksityiskohtaComponent,
+    UusiKysymysComponent
   ],
   imports: [
     BrowserModule,
