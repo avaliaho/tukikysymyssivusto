@@ -1,0 +1,80 @@
+<div class="container m-5">
+    <h1>Ask a public question</h1>
+    <br>
+
+    <!-- Otsikko ja virheentarkistus -->
+    <label for="otsikko">
+        <h4>Title</h4>
+    </label>
+    <p class="text-muted">Be specific and imagine you're asking a question to another person</p>
+    <input type="text" autocomplete="off" class="form-control" id="otsikko" name="otsikko" required minlength="15" [(ngModel)]="otsikko"
+        #otsikkoKentta="ngModel" (input)="hae(otsikkoKentta.value)" />
+
+    <div *ngIf="otsikkoKentta.invalid && (otsikkoKentta.dirty || otsikkoKentta.touched)" class="omaAlert">
+        <div *ngIf="otsikkoKentta.errors?.required">Title is missing.</div>
+        <div *ngIf="otsikkoKentta.errors?.minlength">
+            Title must be at least 15 characters.
+        </div>
+    </div>
+
+    <ul class="list-group">
+        <span *ngIf="(kysymykset$ | async)?.length">
+            <br>
+            <li class="list-group-item list-group-otsake list-group-item-secondary">Similar questions</li>
+        </span>
+    </ul>
+    <div class="list-group overflow">
+        <a *ngFor="let kysymys of kysymykset$ | async" class="list-group-item list-group-item-action"
+            aria-current="true" routerLink="/detail/{{kysymys.id}}">
+            {{ kysymys.title }}
+        </a>
+    </div>
+
+    <br>
+
+    <!-- TinyMCE-kenttä -->
+    <h4>Body</h4>
+    <p class="text-muted">Include all the information someone would need to answer your question</p>
+    <editor [(ngModel)]="html" [init]="{
+      base_url: '/tinymce',
+      suffix: '.min',
+      height: 250,
+      menubar: false,
+      plugins: [
+        'link', 'image', 'code', 'help', 'wordcount', 'advlist', 'lists'
+      ],
+      toolbar:
+        'formatselect | bold italic | \
+        link blockquote code image | \
+        numlist bullist h1 hr | removeformat | undo redo | help'
+    }"></editor>
+    <br>
+
+    <!-- Vapaat avainsanat, ei validointia -->
+    <label for="avainsanat">
+        <h4>Tags</h4>
+    </label>
+    <p class="text-muted">Optionally add up to 3 tags to describe what your question is about. If any, separate them
+        with commas:
+        <code>tag-name-1,tag-name-2</code>
+    </p>
+    <input type="text" autocomplete="off" class="form-control" id="avainsanat" name="avainsanat" [(ngModel)]="avainsanat"
+        #avainsanaKentta="ngModel" />
+    <br>
+
+    <!-- reCAPTCHAv2-->
+    <re-captcha (resolved)="resolved($event)" siteKey="6LcfPwkgAAAAAD-9-9oAsXhhUlv4KppPzLya6jMT"></re-captcha>
+    <br>
+
+    <!-- Tallennusnappi -->
+    <button [disabled]="otsikkoKentta.invalid || !captcha || !html"
+        (click)="tallennaKysymys(otsikkoKentta.value, avainsanaKentta.value)" class="btn btn-primary" type="submit">Post
+        your question</button>&nbsp;
+
+    <span *ngIf="painettu == true">
+        <span class="alert alert-primary" role="alert">
+            Saving... Please wait for a moment.
+        </span>
+    </span>
+
+</div>

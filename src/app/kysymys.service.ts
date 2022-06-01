@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Kysymys } from './kysymys';
 import { Vastaus } from './vastaus';
+import { UusiKysymys } from './uusi-kysymys';
+import { Avainsana } from './avainsana';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,13 @@ export class KysymysService {
   httpValinnat = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
+
+  httpValinnatAuth = {
+    headers: new HttpHeaders({
+      'Authorization': `Basic ${btoa("admin:admin")}`,
+      'Content-Type': 'application/json'
+    })
+  }
 
   /** Haetaan kaikki kysymykset palvelimelta */
   haeKysymykset(sivu: number, jarjestys: string, laskevaNouseva: string): Observable<Kysymys[]> {
@@ -63,5 +72,26 @@ export class KysymysService {
   lisaaVastaus(vastaus: Vastaus): Observable<Vastaus> {
     return this.http.post<Vastaus>(`${this.kysymyksetUrl}/comments`, vastaus, this.httpValinnat);
   }
+
+  /** Lisää uusi kysymys */
+  lisaaKysymys(uusikysymys: UusiKysymys): Observable<UusiKysymys> {
+    return this.http.post<UusiKysymys>(`${this.kysymyksetUrl}/posts`, uusikysymys,
+      this.httpValinnatAuth);
+  }
+
+  /** Lisää uusi avainsana */
+  lisaaTagi(avainsana: Avainsana): Observable<any> {
+    return this.http.post<Avainsana>(`${this.kysymyksetUrl}/tags`, avainsana,
+      this.httpValinnatAuth)
+  }
+
+    /** Ehdottava hakujärjestelmä. Haetaan 25 viimeisintä hakuehtoa vastaavaa kysymystä */
+    haeEhdottavalleHakujarjestelmalle(hakuTermi: string): Observable<Kysymys[]> {
+      if (!hakuTermi.trim()) {
+        // jos ei hakutermiä, palauta tyhjä kysymystaulu
+        return of([])
+      }
+      return this.http.get<Kysymys[]>(`${this.kysymyksetUrl}/search?search=${hakuTermi}&per_page=25`)
+    }
 
 }
