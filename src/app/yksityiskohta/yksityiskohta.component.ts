@@ -79,7 +79,7 @@ export class YksityiskohtaComponent implements OnInit {
       "author_name": "root",
       "author_email": "aleksander.valiaho7@gmail.com"
     }
-    
+
     if (!kentanArvo) { return; }
     this.kysymysService.lisaaVastaus(vastausData as Vastaus)
       .subscribe(vastaus => {

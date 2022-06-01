@@ -2,7 +2,15 @@
 
     <!-- Valittu kysymys ja vastaukset -->
     <div *ngFor="let data of yhdistetty$ | async">
-        <h1>{{ data.title.rendered }}</h1>
+        <div class="row">
+            <div class="col-md-10">
+                <h1>{{ data.title.rendered }}</h1>
+            </div>
+            <div class="col-md-2">
+                <a routerLink="/questions/ask" class="btn btn-primary" role="button" aria-disabled="true">Ask
+                    Question</a>
+            </div>
+        </div>
         <p>Asked {{ data.date | date:'medium' }}</p>
         <hr>
         <p [innerHTML]='data.content.rendered'></p>

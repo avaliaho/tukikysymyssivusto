@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // <-- NgModel asuu täällä
 import { HttpClientModule } from '@angular/common/http';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,7 +26,8 @@ import { UusiKysymysComponent } from './uusi-kysymys/uusi-kysymys.component';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    RecaptchaModule
+    RecaptchaModule,
+    EditorModule
   ],
   providers: [
     // ei tarvitse laittaa yhtään provideria johtuen 'providedIn'-flagistä
