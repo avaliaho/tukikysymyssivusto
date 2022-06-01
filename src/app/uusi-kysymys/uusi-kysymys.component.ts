@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { UusiKysymys } from '../uusi-kysymys';
 import { Avainsana } from '../avainsana';
 import { KysymysService } from '../kysymys.service';
-import { Observable, forkJoin, of, from } from 'rxjs';
-import { map, mergeMap, take, toArray, concatMap } from 'rxjs/operators';
+import { Observable, Subject, from } from 'rxjs';
+import {
+  map, mergeMap, take, toArray, concatMap, debounceTime, distinctUntilChanged, switchMap
+} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Kysymys } from '../kysymys';
 
 @Component({
   selector: 'app-uusi-kysymys',
@@ -21,10 +24,17 @@ export class UusiKysymysComponent implements OnInit {
   }
 
   otsikko: string = '';
+  kysymykset$!: Observable<Kysymys[]>;
+  private hakuTermit = new Subject<string>();
   html: string = '';
   captcha: string;
   avainsanat: string = '';
   painettu: Boolean = false;
+
+  // Työnnä hakutermi Observable-striimiin
+  hae(termi: string): void {
+    this.hakuTermit.next(termi);
+  }
 
   tallennaKysymys(otsikko: string, avainsanat: string) {
 
@@ -68,6 +78,16 @@ export class UusiKysymysComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.kysymykset$ = this.hakuTermit.pipe(
+      // odota 300ms jokaisen painalluksen jälkeen ennen termin käsittelyä
+      debounceTime(300),
+
+      // jätä termi huomiotta jos sama kuin edellinen
+      distinctUntilChanged(),
+
+      // vaihda uuteen Observableen joka kerta kun termi muuttuu
+      switchMap((termi: string) => this.kysymysService.haeEhdottavalleHakujarjestelmalle(termi))
+    )
   }
 
 }
