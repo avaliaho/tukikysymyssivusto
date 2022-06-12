@@ -12,6 +12,7 @@ export class AppComponent {
   }
 
   haku: string = "";
+  kuvaPolku: string = "/assets/avenla-logo.svg";
 
   meneHakuSivulle() {
     if (this.haku != "") {
